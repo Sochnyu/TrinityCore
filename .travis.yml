@@ -6,7 +6,9 @@ compiler:
   - clang
 
 git:
-  depth: 1
+  depth: 100
+
+cache: ccache
 
 addons:
   apt:
@@ -32,14 +34,19 @@ services:
   - mysql
 
 before_install:
-  - git config user.email "travis@build.bot" && git config user.name "Travis CI"
+  - git config user.email "rochet2@post.com" && git config user.name "Rochet2"
   - git tag -a -m "Travis build" init
 
 install:
+  - export CXX="ccache clang++"
+  - export CC="ccache clang"
+  - export CCACHE_CPP2="true"
+  - which g++ gcc clang clang++ cc c++
   - mysql -uroot -e 'create database test_mysql;'
+  - if [ "${TRAVIS_EVENT_TYPE}" == "cron" ]; then git pull https://github.com/TrinityCore/TrinityCore.git master; fi;
   - mkdir bin
   - cd bin
-  - cmake ../ -DWITH_WARNINGS=1 -DWITH_COREDEBUG=0 -DUSE_COREPCH=1 -DUSE_SCRIPTPCH=1 -DTOOLS=1 -DSCRIPTS=dynamic -DSERVERS=1 -DNOJEM=1 -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_FLAGS="-Werror" -DCMAKE_CXX_FLAGS="-Werror" -DCMAKE_C_FLAGS_DEBUG="-DNDEBUG" -DCMAKE_CXX_FLAGS_DEBUG="-DNDEBUG" -DCMAKE_INSTALL_PREFIX=check_install
+  - cmake ../ -DWITH_WARNINGS=1 -DWITH_COREDEBUG=0 -DUSE_COREPCH=0 -DUSE_SCRIPTPCH=0 -DTOOLS=1 -DSCRIPTS=dynamic -DSERVERS=1 -DNOJEM=1 -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_FLAGS="-Werror" -DCMAKE_CXX_FLAGS="-Werror" -DCMAKE_C_FLAGS_DEBUG="-DNDEBUG" -DCMAKE_CXX_FLAGS_DEBUG="-DNDEBUG" -DCMAKE_INSTALL_PREFIX=check_install
   - cd ..
   - chmod +x contrib/check_updates.sh
 
@@ -60,3 +67,7 @@ script:
   - cd check_install/bin
   - ./bnetserver --version
   - ./worldserver --version
+  - ccache --show-stats
+
+after_success:
+  - if [ "${TRAVIS_EVENT_TYPE}" == "cron" ]; then git push https://${GITHUB_TOKEN}@github.com/${TRAVIS_REPO_SLUG}.git HEAD:${TRAVIS_BRANCH}; fi;
