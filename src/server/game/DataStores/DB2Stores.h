@@ -206,6 +206,7 @@ TC_GAME_API extern DB2Storage<UnitPowerBarEntry>                    sUnitPowerBa
 TC_GAME_API extern DB2Storage<VehicleEntry>                         sVehicleStore;
 TC_GAME_API extern DB2Storage<VehicleSeatEntry>                     sVehicleSeatStore;
 TC_GAME_API extern DB2Storage<WorldEffectEntry>                     sWorldEffectStore;
+TC_GAME_API extern DB2Storage<WorldMapAreaEntry>                    sWorldMapAreaStore;
 TC_GAME_API extern DB2Storage<WorldMapOverlayEntry>                 sWorldMapOverlayStore;
 TC_GAME_API extern DB2Storage<WorldSafeLocsEntry>                   sWorldSafeLocsStore;
 
@@ -284,6 +285,7 @@ public:
     ItemChildEquipmentEntry const* GetItemChildEquipment(uint32 itemId) const;
     ItemClassEntry const* GetItemClassByOldEnum(uint32 itemClass) const;
     bool HasItemCurrencyCost(uint32 itemId) const;
+    std::vector<ItemLimitCategoryConditionEntry const*> const* GetItemLimitCategoryConditions(uint32 categoryId) const;
     uint32 GetItemDisplayId(uint32 itemId, uint32 appearanceModId) const;
     ItemModifiedAppearanceEntry const* GetItemModifiedAppearance(uint32 itemId, uint32 appearanceModId) const;
     ItemModifiedAppearanceEntry const* GetDefaultItemModifiedAppearance(uint32 itemId) const;
@@ -302,7 +304,7 @@ public:
     MountTypeXCapabilitySet const* GetMountCapabilities(uint32 mountType) const;
     MountXDisplayContainer const* GetMountDisplays(uint32 mountId) const;
     ResponseCodes ValidateName(std::wstring const& name, LocaleConstant locale) const;
-    std::set<uint32> GetPhasesForGroup(uint32 group) const;
+    std::vector<uint32> const* GetPhasesForGroup(uint32 group) const;
     PowerTypeEntry const* GetPowerTypeEntry(Powers power) const;
     PowerTypeEntry const* GetPowerTypeByName(std::string const& name) const;
     uint8 GetPvpItemLevelBonus(uint32 itemId) const;
@@ -315,6 +317,7 @@ public:
     std::vector<QuestPackageItemEntry const*> const* GetQuestPackageItems(uint32 questPackageID) const;
     std::vector<QuestPackageItemEntry const*> const* GetQuestPackageItemsFallback(uint32 questPackageID) const;
     uint32 GetQuestUniqueBitFlag(uint32 questId);
+    std::vector<RewardPackXCurrencyTypeEntry const*> const* GetRewardPackCurrencyTypesByRewardID(uint32 rewardPackID) const;
     std::vector<RewardPackXItemEntry const*> const* GetRewardPackItemsByRewardID(uint32 rewardPackID) const;
     uint32 GetRulesetItemUpgrade(uint32 itemId) const;
     SkillRaceClassInfoEntry const* GetSkillRaceClassInfo(uint32 skill, uint8 race, uint8 class_);
