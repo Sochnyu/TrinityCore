@@ -21,6 +21,7 @@
 #include "WorldSession.h"
 #include <sstream>
 #include <string>
+#include "DBCStores.h"
 
 #ifdef PRESETS
 void Transmogrification::PresetTransmog(Player* player, Item* itemTransmogrified, uint32 fakeEntry, uint8 slot)
